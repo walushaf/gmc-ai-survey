@@ -271,10 +271,6 @@ input.ls::-webkit-slider-runnable-track{border-radius:4px}
       <span class="study-badge">GMC FACULTY</span>
       <span class="study-name">AI in Medical Education Survey</span>
     </div>
-    <div class="xp-area">
-      <div class="xp-pill">⚡ <span id="xp-count">0</span> XP</div>
-      <div class="lvl-pill" id="lvl-pill">Level 1</div>
-    </div>
   </div>
   <div class="spills">
     <div class="spill active" data-s="welcome">Intro</div>
@@ -285,7 +281,6 @@ input.ls::-webkit-slider-runnable-track{border-radius:4px}
     <div class="spill" data-s="e">Barriers</div>
     <div class="spill" data-s="done">Complete</div>
   </div>
-  <div id="xp-track"><div id="xp-fill"></div></div>
 </header>
 
 <!-- ═══ SCREENS ═══ -->
@@ -302,7 +297,6 @@ input.ls::-webkit-slider-runnable-track{border-radius:4px}
     <div class="w-chips">
       <span class="wchip">⏱ 15–20 min</span>
       <span class="wchip">🔒 Anonymous</span>
-      <span class="wchip">🏆 Earn 1,600 XP</span>
       <span class="wchip">📊 5 Sections</span>
     </div>
   </div>
@@ -347,7 +341,6 @@ input.ls::-webkit-slider-runnable-track{border-radius:4px}
       <div class="sec-step" style="color:var(--teal)">SECTION A · 1 OF 5</div>
       <div class="sec-title">Sociodemographic &amp; Professional Profile</div>
       <div class="sec-sub">Help us understand the diversity of GMC faculty participating in this study.</div>
-      <div class="sec-xp-badge">⚡ +200 XP on completion</div>
     </div>
   </div>
 
@@ -368,7 +361,7 @@ input.ls::-webkit-slider-runnable-track{border-radius:4px}
 
   <div class="btn-row sb">
     <button class="btn btn-g" onclick="goTo('welcome')">← Back</button>
-    <button class="btn btn-p" onclick="nextSec('a','b',200,'Profile Set 🏥','Professional background captured!')">Next: AI Usage →</button>
+    <button class="btn btn-p" onclick="nextSec('a','b')">Next: AI Usage →</button>
   </div>
 </div>
 
@@ -380,7 +373,6 @@ input.ls::-webkit-slider-runnable-track{border-radius:4px}
       <div class="sec-step" style="color:var(--purple)">SECTION B · 2 OF 5</div>
       <div class="sec-title">AI Tool Usage Patterns</div>
       <div class="sec-sub">Tell us how you currently engage with AI in your professional practice.</div>
-      <div class="sec-xp-badge">⚡ +300 XP on completion</div>
     </div>
   </div>
 
@@ -413,26 +405,8 @@ input.ls::-webkit-slider-runnable-track{border-radius:4px}
     <div class="sec-hero-content">
       <div class="sec-step" style="color:var(--orange)">SECTION C · 3 OF 5</div>
       <div class="sec-title">Knowledge &amp; Awareness</div>
-      <div class="sec-sub">Mark each statement True, False, or Not Sure. You'll see your score animated at the end!</div>
-      <div class="sec-xp-badge">⚡ +400 XP + 10 bonus XP per correct answer</div>
+      <div class="sec-sub">Mark each statement True, False, or Not Sure.</div>
     </div>
-  </div>
-
-  <div class="score-card" id="c-score-card">
-    <div style="font-size:11px;color:var(--text-muted);letter-spacing:.8px;font-weight:700;margin-bottom:16px">YOUR KNOWLEDGE SCORE</div>
-    <div class="score-ring">
-      <svg viewBox="0 0 120 120" width="140" height="140">
-        <circle class="ring-bg" cx="60" cy="60" r="54"/>
-        <circle class="ring-prog" id="ring-prog" cx="60" cy="60" r="54"/>
-      </svg>
-      <div class="score-inner">
-        <div class="score-big" id="score-big">0</div>
-        <div class="score-den">/10</div>
-      </div>
-    </div>
-    <div class="score-lbl">AI in Medical Education Knowledge</div>
-    <div class="score-cat" id="score-cat">—</div>
-    <div class="score-xp-msg" id="score-xp-msg"></div>
   </div>
 
   <div id="c-qs">
@@ -452,7 +426,7 @@ input.ls::-webkit-slider-runnable-track{border-radius:4px}
 
   <div class="btn-row sb">
     <button class="btn btn-g" onclick="goTo('b')">← Back</button>
-    <button class="btn btn-p" id="c-next-btn" onclick="nextSecC()">Reveal Score &amp; Continue →</button>
+    <button class="btn btn-p" id="c-next-btn" onclick="nextSecC()">Next: Attitudes →</button>
   </div>
 </div>
 
@@ -464,7 +438,6 @@ input.ls::-webkit-slider-runnable-track{border-radius:4px}
       <div class="sec-step" style="color:var(--blue)">SECTION D · 4 OF 5</div>
       <div class="sec-title">Attitudes &amp; Perceptions</div>
       <div class="sec-sub">Drag each slider from Strongly Agree to Strongly Disagree. There are no right or wrong answers.</div>
-      <div class="sec-xp-badge">⚡ +300 XP on completion</div>
     </div>
   </div>
 
@@ -480,7 +453,7 @@ input.ls::-webkit-slider-runnable-track{border-radius:4px}
 
   <div class="btn-row sb">
     <button class="btn btn-g" onclick="goTo('c')">← Back</button>
-    <button class="btn btn-p" onclick="nextSec('d','e',300,'Voice Heard 💭','Your perspectives are invaluable!')">Next: Barriers →</button>
+    <button class="btn btn-p" onclick="nextSec('d','e')">Next: Barriers →</button>
   </div>
 </div>
 
@@ -492,7 +465,6 @@ input.ls::-webkit-slider-runnable-track{border-radius:4px}
       <div class="sec-step" style="color:var(--green)">SECTION E · 5 OF 5</div>
       <div class="sec-title">Barriers &amp; Facilitators</div>
       <div class="sec-sub">Click a number to assign a rank (1 = most significant). You can change your ranking at any time. Mark N/A if not applicable.</div>
-      <div class="sec-xp-badge">⚡ +500 XP — final section! 🏆</div>
     </div>
   </div>
 
@@ -540,12 +512,6 @@ input.ls::-webkit-slider-runnable-track{border-radius:4px}
     <span class="done-ico">🎉</span>
     <div class="done-title">Thank You for Contributing!</div>
     <div class="done-sub">Your response has been submitted successfully.<br>You're helping shape the future of AI in medical education at GMC.</div>
-    <div class="done-xp-card">
-      <div style="font-size:12px;color:var(--text-muted);letter-spacing:.5px;font-weight:700;margin-bottom:6px">TOTAL XP EARNED</div>
-      <div class="done-xp" id="done-xp">0</div>
-      <div class="done-lvl" id="done-lvl">—</div>
-    </div>
-    <div class="done-badges" id="done-badges"></div>
     <p style="font-size:12px;color:var(--text-muted);margin-top:24px;line-height:1.65">
       <em>Is AI Shaping Medical Education? A Faculty Perspective and Utilisation Exploration</em><br>
       IEC Approved · Goa Medical College · 2026
@@ -555,9 +521,6 @@ input.ls::-webkit-slider-runnable-track{border-radius:4px}
 
 </div><!-- /screens -->
 </div><!-- /app -->
-
-<!-- Achievement Toast -->
-<div id="ach-toast"><div class="ach-ico" id="ach-ico">🏅</div><div><div class="ach-ttl">ACHIEVEMENT UNLOCKED</div><div class="ach-nm" id="ach-nm">—</div></div></div>
 
 <!-- Submit overlay -->
 <div class="sub-overlay" id="sub-overlay"><div class="spin"></div><div class="sub-txt">Submitting your response…</div></div>
@@ -599,17 +562,9 @@ const state = {
   consent:[false,false,false,false],
   radio:{}, checks:{}, likert:{}, kq:{},
   rank:{e1:{},e2:{}},
-  xp:0, achievements:[], skipCD:false, cScored:false,
+  skipCD:false, cScored:false, cScore:0,
 };
 const CORRECT={1:'True',2:'True',3:'False',4:'True',5:'False',6:'True',7:'True',8:'False',9:'True',10:'True'};
-const LEVELS=[
-  {min:0,   name:'Level 1 · Observer'},
-  {min:200, name:'Level 2 · Explorer'},
-  {min:500, name:'Level 3 · Contributor'},
-  {min:900, name:'Level 4 · Analyst'},
-  {min:1300,name:'Level 5 · Scholar'},
-  {min:1600,name:'Level 6 · Research Champion'},
-];
 
 // ── BUILD LIKERT SLIDERS ──
 function buildLikert(){
@@ -659,10 +614,6 @@ function buildRankBtns(){
         b.onclick=()=>setRank(sec,i,r);
         cont.appendChild(b);
       }
-      const na=document.createElement('button');
-      na.className='rb na-rb';na.textContent='N/A';
-      na.onclick=()=>setRank(sec,i,'NA');
-      cont.appendChild(na);
     }
   });
 }
@@ -685,7 +636,6 @@ function refreshRankUI(sec,idx){
   const btns=document.getElementById('rbtns-'+sec+'-'+idx).querySelectorAll('.rb');
   btns.forEach(b=>b.classList.remove('ractive','na-active'));
   if(val===undefined){badge.textContent='?';badge.className='rank-badge';item.classList.remove('is-ranked')}
-  else if(val==='NA'){badge.textContent='N/A';badge.className='rank-badge na-set';item.classList.add('is-ranked');btns[btns.length-1].classList.add('na-active')}
   else{badge.textContent=val;badge.className='rank-badge set';item.classList.add('is-ranked');btns[val-1].classList.add('ractive')}
 }
 
@@ -730,15 +680,15 @@ function validateSec(fields){
 }
 
 // ── SECTION NAVIGATION ──
-function nextSec(from,to,xp,ach,msg){
+function nextSec(from,to){
   const fmap={a:['a2','a3','a4','a5','a6','a7','a8','a9','a10','a11'],d:[]};
   if(fmap[from]?.length&&!validateSec(fmap[from]))return;
-  addXP(xp);if(ach)showAch(ach,msg);markDone(from);goTo(to);
+  markDone(from);goTo(to);
 }
 
 function nextSecB(){
   if(!validateSec(['b1']))return;
-  addXP(300);showAch('AI Explorer 🤖','Usage patterns captured!');markDone('b');
+  markDone('b');
   if(state.radio['b1']==='No'){state.skipCD=true;goTo('e')}
   else{state.skipCD=false;goTo('c')}
 }
@@ -746,61 +696,17 @@ function nextSecB(){
 function nextSecC(){
   if(Object.keys(state.kq).length<10){alert('Please answer all 10 knowledge questions before continuing.');return}
   if(state.cScored){goTo('d');return}
-  let score=0;
-  for(let i=1;i<=10;i++){
-    const a=state.kq[i],c=CORRECT[i],box=document.getElementById('kq'+i),fb=document.getElementById('kfb'+i);
-    if(a===c){score++;box.classList.add('correct');fb.textContent='✓ Correct!'}
-    else{box.classList.add('wrong');fb.textContent='✗ The correct answer is: '+c}
-  }
-  const bXP=400,bns=score*10;addXP(bXP+bns);
-  showAch('Knowledge Champion 🧠','Score: '+score+'/10 — well done!');
-  markDone('c');state.cScored=true;
-
-  // Animate ring
-  const card=document.getElementById('c-score-card');card.classList.add('show');
-  const circumference=2*Math.PI*54; // r=54
-  const ring=document.getElementById('ring-prog');
-  ring.style.strokeDashoffset=circumference;
-  let n=0;
-  const t=setInterval(()=>{
-    n=Math.min(n+1,score);
-    document.getElementById('score-big').textContent=n;
-    ring.style.strokeDashoffset=circumference-(n/10)*circumference;
-    if(n>=score)clearInterval(t);
-  },90);
-  const cat=document.getElementById('score-cat');
-  if(score>=8){cat.textContent='🏆 Good (8–10)';cat.className='score-cat cat-good';ring.style.stroke='#4ade80'}
-  else if(score>=5){cat.textContent='📊 Moderate (5–7)';cat.className='score-cat cat-mod';ring.style.stroke='#f59e0b'}
-  else{cat.textContent='📚 Poor (< 5)';cat.className='score-cat cat-poor';ring.style.stroke='#f87171'}
-  document.getElementById('score-xp-msg').textContent=`+${bXP} base XP + ${bns} bonus XP earned`;
-  document.getElementById('c-qs').style.display='none';
-
-  const btn=document.getElementById('c-next-btn');
-  btn.textContent='Next: Attitudes →';btn.onclick=()=>goTo('d');
+  state.cScore=0;
+  for(let i=1;i<=10;i++){if(state.kq[i]===CORRECT[i])state.cScore++;}
+  markDone('c');state.cScored=true;goTo('d');
 }
 
 function goBackFromE(){goTo(state.skipCD?'b':'d')}
 
 function markDone(s){document.querySelectorAll('.spill').forEach(sp=>{if(sp.dataset.s===s)sp.classList.add('done')})}
 
-// ── XP & LEVELS ──
-function addXP(n){
-  state.xp+=n;
-  document.getElementById('xp-count').textContent=state.xp;
-  document.getElementById('xp-fill').style.width=Math.min(state.xp/1600*100,100)+'%';
-  const lvl=LEVELS.filter(l=>state.xp>=l.min).pop();
-  document.getElementById('lvl-pill').textContent=lvl.name.split('·')[0].trim();
-}
-
-// ── ACHIEVEMENTS ──
-let achTimer=null;
-function showAch(name,msg){
-  state.achievements.push(name);
-  document.getElementById('ach-nm').textContent=msg||name;
-  const t=document.getElementById('ach-toast');t.classList.add('show');
-  if(achTimer)clearTimeout(achTimer);
-  achTimer=setTimeout(()=>t.classList.remove('show'),3400);
-}
+function addXP(){}
+function showAch(){}
 
 // ── SUBMIT ──
 async function submitSurvey(){
@@ -820,7 +726,7 @@ async function submitSurvey(){
     B7_TimePerDay:d['b7']||'',B8_Disclosure:d['b8']||'',B9_FactCheck:d['b9']||'',B10_Guidance:d['b10']||'',
     C1:k[1]||'',C2:k[2]||'',C3:k[3]||'',C4:k[4]||'',C5:k[5]||'',
     C6:k[6]||'',C7:k[7]||'',C8:k[8]||'',C9:k[9]||'',C10:k[10]||'',
-    C_Score:Object.entries(k).filter(([i,v])=>v===CORRECT[parseInt(i)]).length,
+    C_Score:state.cScore||0,
     D1:l[1]||'',D2:l[2]||'',D3:l[3]||'',D4:l[4]||'',D5:l[5]||'',
     D6:l[6]||'',D7:l[7]||'',D8:l[8]||'',D9:l[9]||'',D10:l[10]||'',
     D11:l[11]||'',D12:l[12]||'',D13:l[13]||'',D14:l[14]||'',D15:l[15]||'',
@@ -829,17 +735,12 @@ async function submitSurvey(){
     E2_Ease:rk.e2[0]??'',E2_TimeSaving:rk.e2[1]??'',E2_Literacy:rk.e2[2]??'',
     E2_Guidelines:rk.e2[3]??'',E2_Endorsement:rk.e2[4]??'',E2_Outcomes:rk.e2[5]??'',E2_PeerUsage:rk.e2[6]??'',
     E3_Suggestion:document.getElementById('e3').value,
-    TotalXP:state.xp,Achievements:state.achievements.join(', '),
+    TotalXP:0,Achievements:'',
   };
   document.getElementById('sub-overlay').classList.add('show');
   try{await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(data)})}catch(e){}
   document.getElementById('sub-overlay').classList.remove('show');
-  addXP(500);showAch('Research Champion 🏆','Survey complete — thank you!');markDone('e');
-  document.getElementById('done-xp').textContent=state.xp+' XP';
-  const lvl=LEVELS.filter(l=>state.xp>=l.min).pop();
-  document.getElementById('done-lvl').textContent='🏅 '+lvl.name;
-  const bc=document.getElementById('done-badges');
-  state.achievements.forEach(a=>{const d=document.createElement('div');d.className='dbadge';d.textContent='✦ '+a;bc.appendChild(d)});
+  markDone('e');
   goTo('done');launchConfetti();
 }
 
