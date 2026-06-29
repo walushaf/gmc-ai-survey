@@ -527,7 +527,7 @@ input.ls::-webkit-slider-runnable-track{border-radius:4px}
 
 <script>
 // ── CONFIG ──
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzf_Jd3V5k1omfZasrwsTJxn4BGf3ZeNfCqc4cyTAMg02aHxY82PS_APmGj70aIUFnjlg/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyb8-5Rw2_6ZepgaUD9R9A4Nl2IiYGR9Hpr5-7RK78nTnnR04G38xeY6VhoqmowzmMwDw/exec';
 
 // ── LIKERT DATA ──
 const LC = [
@@ -661,7 +661,22 @@ function startSurvey(){
 function genCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:8},()=>c[Math.floor(Math.random()*c.length)]).join('')}
 function toggleConsent(i){state.consent[i]=!state.consent[i];document.getElementById('cc'+i).classList.toggle('on',state.consent[i])}
 function selR(f,v,el){state.radio[f]=v;el.closest('.opts').querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');el.closest('.qb')?.classList.remove('err')}
-function togCk(el,f,v){if(!state.checks[f])state.checks[f]=new Set();const s=state.checks[f];if(s.has(v)){s.delete(v);el.classList.remove('sel')}else{s.add(v);el.classList.add('sel')};el.closest('.qb')?.classList.remove('err')}
+function togCk(el,f,v){
+  if(!state.checks[f])state.checks[f]=new Set();
+  const s=state.checks[f];
+  if(s.has(v)){s.delete(v);el.classList.remove('sel')}
+  else{
+    // If adding a real option, remove 'None' if present
+    if(s.has('None')){
+      s.delete('None');
+      el.closest('.opts').querySelectorAll('.opt').forEach(o=>{
+        if(o.querySelector('.opt-lbl')?.textContent?.trim()==='None')o.classList.remove('sel');
+      });
+    }
+    s.add(v);el.classList.add('sel');
+  }
+  el.closest('.qb')?.classList.remove('err');
+}
 function togCkEx(el,f,v){if(!state.checks[f])state.checks[f]=new Set();el.closest('.opts').querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));state.checks[f]=new Set([v]);el.classList.add('sel')}
 function getC(f){return state.checks[f]?[...state.checks[f]].join(', '):''}
 function ansKQ(n,v,btn){state.kq[n]=v;document.getElementById('kq'+n).querySelectorAll('.kb').forEach(b=>b.className='kb');btn.className='kb ksel-'+(v==='True'?'T':v==='False'?'F':'N');document.getElementById('kq'+n).classList.add('answered')}
