@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI in Medical Education — GMC Faculty Survey</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#050c18;color:#e2e8f0;min-height:100vh;overflow-x:hidden}
+
+:root{
+  --teal:#00d4aa;--teal-dim:#007a62;--teal-glow:rgba(0,212,170,.15);
+  --blue:#3b82f6;--purple:#a78bfa;--gold:#f59e0b;
+  --red:#f87171;--green:#4ade80;--orange:#fb923c;
+  --surface:#0d1a2d;--surface2:#132030;--surface3:#1a2a3e;
+  --border:#1e3a5f;--border2:#2a5480;
+  --text:#e2e8f0;--text-dim:#94a3b8;--text-muted:#4a6080;
+  --r:12px;--r-sm:8px;--r-lg:20px;
+}
+
+/* ── BACKGROUND GRID ── */
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(0,212,170,.06) 1px,transparent 0);background-size:30px 30px;pointer-events:none;z-index:0}
+#app{position:relative;z-index:1}
+
+/* ── HEADER ── */
+#hdr{position:sticky;top:0;z-index:100;background:rgba(5,12,24,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.hdr-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 20px 8px}
+.study-badge{font-size:11px;color:var(--teal);background:var(--teal-glow);border:1px solid var(--teal-dim);padding:3px 9px;border-radius:20px;letter-spacing:.5px;font-weight:700}
+.study-name{font-size:12px;color:var(--text-muted);margin-left:8px}
+.xp-area{display:flex;align-items:center;gap:8px}
+.xp-pill{font-size:13px;font-weight:700;color:var(--gold);background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);padding:4px 11px;border-radius:20px}
+.lvl-pill{font-size:11px;color:var(--purple);background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.3);padding:4px 11px;border-radius:20px;font-weight:600}
+.spills{display:flex;gap:5px;padding:6px 20px;overflow-x:auto;scrollbar-width:none}
+.spills::-webkit-scrollbar{display:none}
+.spill{font-size:11px;padding:4px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text-muted);white-space:nowrap;transition:.25s;cursor:default;font-weight:500}
+.spill.active{border-color:var(--teal);color:var(--teal);background:var(--teal-glow)}
+.spill.done{border-color:var(--teal-dim);color:var(--teal-dim)}
+#xp-track{height:3px;background:var(--surface3)}
+#xp-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue),var(--purple));width:0%;transition:width .8s cubic-bezier(.4,0,.2,1)}
+
+/* ── SCREENS ── */
+#screens{max-width:780px;margin:0 auto;padding:28px 20px 72px}
+.screen{display:none}
+.screen.active{display:block;animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SECTION HERO BANNERS ── */
+.sec-hero{border-radius:20px;padding:28px 28px 22px;margin-bottom:24px;position:relative;overflow:hidden}
+.sec-hero::before{content:'';position:absolute;inset:0;background:inherit;filter:blur(0);z-index:0}
+.sec-hero-a{background:linear-gradient(135deg,rgba(0,212,170,.18) 0%,rgba(59,130,246,.1) 100%);border:1px solid rgba(0,212,170,.25)}
+.sec-hero-b{background:linear-gradient(135deg,rgba(167,139,250,.18) 0%,rgba(59,130,246,.1) 100%);border:1px solid rgba(167,139,250,.25)}
+.sec-hero-c{background:linear-gradient(135deg,rgba(251,146,60,.18) 0%,rgba(245,158,11,.1) 100%);border:1px solid rgba(251,146,60,.25)}
+.sec-hero-d{background:linear-gradient(135deg,rgba(59,130,246,.18) 0%,rgba(167,139,250,.1) 100%);border:1px solid rgba(59,130,246,.25)}
+.sec-hero-e{background:linear-gradient(135deg,rgba(74,222,128,.18) 0%,rgba(0,212,170,.1) 100%);border:1px solid rgba(74,222,128,.25)}
+.sec-hero-content{position:relative;z-index:1}
+.sec-step{font-size:11px;font-weight:700;letter-spacing:.8px;opacity:.7;margin-bottom:4px}
+.sec-title{font-size:24px;font-weight:800;margin-bottom:6px}
+.sec-sub{font-size:13px;opacity:.8;line-height:1.65}
+.sec-xp-badge{display:inline-flex;align-items:center;gap:5px;margin-top:12px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.4);padding:4px 12px;border-radius:20px;font-size:12px;color:var(--gold);font-weight:700}
+.sec-icon-bg{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:72px;opacity:.12;pointer-events:none;user-select:none;z-index:0}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;margin-bottom:14px}
+
+/* ── QUESTIONS ── */
+.qb{margin-bottom:22px}
+.ql{font-size:14px;font-weight:600;color:var(--text);margin-bottom:10px;line-height:1.55}
+.qn{font-size:11px;color:var(--teal);margin-right:5px;font-family:monospace;font-weight:700}
+.req{color:var(--red);margin-left:2px}
+.ferr{font-size:12px;color:var(--red);margin-top:5px;display:none}
+.qb.err .ferr{display:block}
+.tinput{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:11px 14px;color:var(--text);font-size:14px;width:100%;outline:none;transition:border-color .2s;font-family:inherit}
+.tinput:focus{border-color:var(--teal)}
+.tinput::placeholder{color:var(--text-muted)}
+textarea.tinput{resize:vertical;min-height:90px;line-height:1.6}
+
+/* ── RADIO / CHECKBOX ── */
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;align-items:center;gap:10px;padding:11px 15px;border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:.2s;user-select:none;background:var(--surface2)}
+.opt:hover{border-color:var(--border2);background:var(--surface3)}
+.opt.sel{border-color:var(--teal);background:rgba(0,212,170,.1)}
+.opt-mark{width:19px;height:19px;border:2px solid var(--border2);border-radius:50%;flex-shrink:0;position:relative;transition:.2s}
+.opt-mark.sq{border-radius:5px}
+.opt.sel .opt-mark{border-color:var(--teal)}
+.opt.sel .opt-mark::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--teal)}
+.opt.sel .opt-mark.sq::after{border-radius:2px}
+.opt-lbl{font-size:13px;flex:1}
+.opt.other-opt .other-txt{background:transparent;border:none;outline:none;color:var(--text);font-size:13px;margin-left:4px;min-width:110px;font-family:inherit}
+
+/* ══════════════════════════════════════════
+   LIKERT SLIDER — main visual redesign
+   ══════════════════════════════════════════ */
+.lik-outer{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+.lik-item{padding:18px 20px;border-bottom:1px solid var(--border);transition:background .2s}
+.lik-item:last-child{border-bottom:none}
+.lik-item.touched{background:var(--surface2)}
+.lik-stmt{font-size:13px;color:var(--text);line-height:1.55;margin-bottom:14px}
+.lik-stmt .lik-n{font-size:11px;color:var(--teal);margin-right:5px;font-family:monospace;font-weight:700}
+/* Value display */
+.lik-vd{display:flex;align-items:center;justify-content:center;gap:8px;min-height:32px;margin-bottom:10px;transition:.3s}
+.lik-em{font-size:22px;line-height:1;transition:transform .2s}
+.lik-vt{font-size:13px;font-weight:700;transition:color .2s}
+.lik-vd.unset .lik-em{opacity:.2;font-size:16px}
+.lik-vd.unset .lik-vt{opacity:.3;font-size:12px;color:var(--text-muted)!important}
+/* Slider track */
+.lik-track{position:relative;padding:2px 0}
+input.ls{
+  -webkit-appearance:none;appearance:none;
+  width:100%;height:8px;border-radius:4px;outline:none;cursor:pointer;
+  background:linear-gradient(90deg,#4ade80 0%,#a7f3d0 25%,#cbd5e1 50%,#fca5a5 75%,#f87171 100%);
+}
+input.ls::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:28px;height:28px;border-radius:50%;
+  background:var(--surface);cursor:pointer;
+  border:3px solid var(--tc,#64748b);
+  box-shadow:0 0 0 5px rgba(0,0,0,.25),0 0 16px var(--tc,rgba(100,116,139,.4));
+  transition:border-color .2s,box-shadow .2s,transform .15s;
+}
+input.ls:active::-webkit-slider-thumb{transform:scale(1.18)}
+input.ls::-moz-range-thumb{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--surface);cursor:pointer;
+  border:3px solid var(--tc,#64748b);
+  box-shadow:0 0 12px var(--tc,rgba(100,116,139,.4));
+  transition:border-color .2s,box-shadow .2s;
+}
+input.ls::-webkit-slider-runnable-track{border-radius:4px}
+.lik-labels{display:flex;justify-content:space-between;margin-top:8px}
+.lik-labels span{font-size:9.5px;color:var(--text-muted);text-align:center;width:20%;letter-spacing:.3px;font-weight:600}
+
+/* ── KNOWLEDGE CARDS ── */
+.kq{padding:18px 20px;border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:10px;background:var(--surface);transition:.3s}
+.kq.answered{border-color:var(--border2)}
+.kq.correct{border-color:var(--green);background:rgba(74,222,128,.05)}
+.kq.wrong{border-color:var(--red);background:rgba(248,113,113,.05)}
+.kq-txt{font-size:14px;color:var(--text);margin-bottom:14px;line-height:1.6}
+.kq-txt .qn{font-size:12px}
+.kq-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.kb{padding:11px 6px;border-radius:var(--r);background:var(--surface2);color:var(--text-dim);font-size:12px;font-weight:700;cursor:pointer;transition:.2s;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit}
+.kb:hover{border-color:var(--border2);background:var(--surface3);color:var(--text)}
+.kb.ksel-T{border-color:var(--green);background:rgba(74,222,128,.15);color:var(--green)}
+.kb.ksel-F{border-color:var(--red);background:rgba(248,113,113,.15);color:var(--red)}
+.kb.ksel-N{border-color:var(--text-muted);background:rgba(148,163,184,.1);color:var(--text-dim)}
+.kq-fb{font-size:12px;margin-top:10px;padding:7px 12px;border-radius:var(--r-sm);display:none;font-weight:500}
+.kq.correct .kq-fb{display:block;background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.2)}
+.kq.wrong .kq-fb{display:block;background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.2)}
+
+/* ── SCORE CARD ── */
+.score-card{text-align:center;padding:36px 24px;border-radius:var(--r-lg);border:1px solid var(--border);background:var(--surface);margin-bottom:22px;display:none}
+.score-card.show{display:block;animation:fadeUp .5s ease}
+.score-ring{width:140px;height:140px;margin:0 auto 16px;position:relative}
+.score-ring svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--surface3);stroke-width:8}
+.ring-prog{fill:none;stroke:var(--teal);stroke-width:8;stroke-linecap:round;stroke-dasharray:339.3;stroke-dashoffset:339.3;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)}
+.score-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-big{font-size:42px;font-weight:900;color:var(--teal);line-height:1}
+.score-den{font-size:16px;color:var(--text-muted);font-weight:600}
+.score-lbl{font-size:13px;color:var(--text-dim);margin-bottom:10px}
+.score-cat{display:inline-block;padding:5px 16px;border-radius:20px;font-size:13px;font-weight:700}
+.cat-good{background:rgba(74,222,128,.15);border:1px solid #4ade80;color:#4ade80}
+.cat-mod{background:rgba(245,158,11,.15);border:1px solid var(--gold);color:var(--gold)}
+.cat-poor{background:rgba(248,113,113,.15);border:1px solid var(--red);color:var(--red)}
+.score-xp-msg{font-size:12px;color:var(--text-muted);margin-top:12px}
+
+/* ── RANKING ── */
+.rank-item{display:flex;align-items:center;gap:12px;padding:13px 15px;border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;background:var(--surface2);transition:.25s}
+.rank-item.is-ranked{border-color:rgba(0,212,170,.4);background:rgba(0,212,170,.05)}
+.rank-badge{min-width:34px;height:34px;border-radius:50%;border:2.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--text-muted);flex-shrink:0;transition:.25s}
+.rank-badge.set{border-color:var(--teal);color:var(--teal);background:var(--teal-glow);box-shadow:0 0 14px rgba(0,212,170,.3)}
+.rank-badge.na-set{border-color:var(--text-muted);color:var(--text-muted);font-size:10px}
+.rank-txt{font-size:13px;color:var(--text);flex:1;line-height:1.4}
+.rbtns{display:flex;gap:4px;flex-wrap:wrap}
+.rb{width:28px;height:28px;border-radius:6px;background:var(--surface);border:1.5px solid var(--border);color:var(--text-muted);font-size:11px;font-weight:700;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;font-family:inherit}
+.rb:hover{border-color:var(--teal);color:var(--teal)}
+.rb.ractive{border-color:var(--teal);background:var(--teal-glow);color:var(--teal);box-shadow:0 0 8px rgba(0,212,170,.2)}
+.rb.na-rb{font-size:9px;width:32px}
+.rb.na-active{border-color:var(--text-muted);background:rgba(148,163,184,.1);color:var(--text-dim)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:12px 24px;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;border:none;outline:none;transition:.2s;font-family:inherit}
+.btn-p{background:linear-gradient(135deg,var(--teal),#00bcd4);color:#050c18}
+.btn-p:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 6px 22px rgba(0,212,170,.35)}
+.btn-p:active{transform:translateY(0)}
+.btn-g{background:var(--surface2);color:var(--text-dim);border:1px solid var(--border)}
+.btn-g:hover{color:var(--text);border-color:var(--border2)}
+.btn-submit{background:linear-gradient(135deg,var(--teal),var(--blue));color:#fff}
+.btn-submit:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 6px 24px rgba(59,130,246,.4)}
+.btn-lg{padding:16px 36px;font-size:16px;border-radius:16px}
+.btn-row{display:flex;gap:10px;justify-content:flex-end;margin-top:26px}
+.btn-row.sb{justify-content:space-between}
+
+/* ── WELCOME ── */
+.w-hero{text-align:center;padding:32px 10px 24px;position:relative}
+.w-glow{position:absolute;top:0;left:50%;transform:translateX(-50%);width:400px;height:200px;background:radial-gradient(ellipse,rgba(0,212,170,.15) 0%,transparent 70%);pointer-events:none}
+.w-icon{font-size:72px;display:block;margin-bottom:16px;animation:float 3.5s ease-in-out infinite;position:relative}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+.w-title{font-size:28px;font-weight:900;background:linear-gradient(135deg,var(--teal) 0%,#3b82f6 60%,var(--purple) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;line-height:1.2}
+.w-sub{font-size:14px;color:var(--text-dim);margin-bottom:4px}
+.w-sub2{font-size:12px;color:var(--text-muted)}
+.w-chips{display:flex;justify-content:center;gap:8px;margin-top:18px;flex-wrap:wrap}
+.wchip{font-size:12px;color:var(--text-dim);background:var(--surface2);border:1px solid var(--border);padding:6px 14px;border-radius:20px;display:flex;align-items:center;gap:5px}
+
+/* ── CONSENT ── */
+.con-item{display:flex;align-items:flex-start;gap:11px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;transition:.15s}
+.con-item:last-child{border-bottom:none}
+.con-item:hover .con-txt{color:var(--text)}
+.con-chk{width:21px;height:21px;border:2px solid var(--border2);border-radius:5px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:.2s;background:var(--surface2)}
+.con-chk.on{background:var(--teal);border-color:var(--teal)}
+.con-chk.on::after{content:'✓';color:#050c18;font-size:12px;font-weight:900}
+.con-txt{font-size:13px;color:var(--text-dim);line-height:1.6;transition:.15s}
+
+/* ── ACHIEVEMENT TOAST ── */
+#ach-toast{position:fixed;top:86px;right:20px;background:var(--surface);border:1px solid var(--gold);border-radius:16px;padding:13px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 28px rgba(245,158,11,.3),0 0 0 1px rgba(245,158,11,.1);z-index:300;transform:translateX(140%);transition:transform .45s cubic-bezier(.34,1.56,.64,1)}
+#ach-toast.show{transform:translateX(0)}
+.ach-ico{font-size:28px}
+.ach-ttl{font-size:10px;color:var(--gold);font-weight:800;letter-spacing:.8px}
+.ach-nm{font-size:13px;color:var(--text);font-weight:600;margin-top:1px}
+
+/* ── SKIP NOTICE ── */
+.skip-note{background:var(--surface2);border:1px dashed var(--border2);border-radius:var(--r);padding:14px 16px;color:var(--text-dim);font-size:13px;margin-bottom:16px;display:none;line-height:1.5}
+
+/* ── COMPLETION ── */
+.done-hero{text-align:center;padding:48px 20px 28px;position:relative}
+.done-glow{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(0,212,170,.12),transparent 60%);pointer-events:none}
+.done-ico{font-size:80px;display:block;margin-bottom:20px;animation:celebrate 1s ease-out}
+@keyframes celebrate{0%{transform:scale(0) rotate(-20deg)}70%{transform:scale(1.15) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
+.done-title{font-size:28px;font-weight:900;background:linear-gradient(135deg,var(--teal),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+.done-sub{font-size:14px;color:var(--text-dim);line-height:1.65;margin-bottom:28px}
+.done-xp-card{background:var(--surface2);border:1px solid var(--gold);border-radius:20px;padding:24px;margin-bottom:20px;box-shadow:0 0 40px rgba(245,158,11,.1)}
+.done-xp{font-size:56px;font-weight:900;color:var(--gold);line-height:1}
+.done-lvl{font-size:16px;color:var(--purple);font-weight:700;margin-top:6px}
+.done-badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+.dbadge{background:var(--surface2);border:1px solid rgba(245,158,11,.3);padding:6px 14px;border-radius:20px;font-size:12px;color:var(--gold)}
+
+/* ── CONFETTI ── */
+.cf{position:fixed;pointer-events:none;z-index:999;border-radius:3px;animation:cf-fall linear forwards}
+@keyframes cf-fall{0%{opacity:1;transform:translateY(-20px) rotate(0) scale(1)}100%{opacity:0;transform:translateY(110vh) rotate(800deg) scale(.5)}}
+
+/* ── SUBMIT OVERLAY ── */
+.sub-overlay{position:fixed;inset:0;background:rgba(5,12,24,.9);backdrop-filter:blur(12px);z-index:400;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.sub-overlay.show{display:flex}
+.spin{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .75s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sub-txt{font-size:14px;color:var(--text-dim)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:580px){
+  .sec-icon-bg{display:none}
+  .sec-title{font-size:20px}
+  .w-title{font-size:22px}
+  .done-xp{font-size:44px}
+  .kq-btns{grid-template-columns:1fr 1fr 1fr}
+  .rbtns{gap:3px}
+  .rb{width:24px;height:24px;font-size:10px}
+  .rb.na-rb{width:28px}
+  .btn-row.sb{flex-direction:column-reverse}
+  .btn-row.sb .btn{width:100%;justify-content:center}
+  .lik-em{font-size:18px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ═══ HEADER ═══ -->
+<header id="hdr">
+  <div class="hdr-inner">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="study-badge">GMC FACULTY</span>
+      <span class="study-name">AI in Medical Education Survey</span>
+    </div>
+    <div class="xp-area">
+      <div class="xp-pill">⚡ <span id="xp-count">0</span> XP</div>
+      <div class="lvl-pill" id="lvl-pill">Level 1</div>
+    </div>
+  </div>
+  <div class="spills">
+    <div class="spill active" data-s="welcome">Intro</div>
+    <div class="spill" data-s="a">Profile</div>
+    <div class="spill" data-s="b">AI Usage</div>
+    <div class="spill" data-s="c">Knowledge</div>
+    <div class="spill" data-s="d">Attitudes</div>
+    <div class="spill" data-s="e">Barriers</div>
+    <div class="spill" data-s="done">Complete</div>
+  </div>
+  <div id="xp-track"><div id="xp-fill"></div></div>
+</header>
+
+<!-- ═══ SCREENS ═══ -->
+<div id="screens">
+
+<!-- ▸ WELCOME -->
+<div class="screen active" id="screen-welcome">
+  <div class="w-hero">
+    <div class="w-glow"></div>
+    <span class="w-icon">🧠</span>
+    <div class="w-title">Is AI Shaping<br>Medical Education?</div>
+    <div class="w-sub">A Faculty Perspective & Utilisation Exploration</div>
+    <div class="w-sub2">Goa Medical College · IEC Approved Study · 2026</div>
+    <div class="w-chips">
+      <span class="wchip">⏱ 15–20 min</span>
+      <span class="wchip">🔒 Anonymous</span>
+      <span class="wchip">🏆 Earn 1,600 XP</span>
+      <span class="wchip">📊 5 Sections</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.5px;margin-bottom:10px">📋 ABOUT THIS STUDY</div>
+    <p style="font-size:13px;color:var(--text-dim);line-height:1.75">
+      You are invited to participate in a study exploring AI tool usage patterns, knowledge, and attitudes among GMC faculty.
+      This questionnaire is <strong style="color:var(--teal)">completely anonymous</strong> — no identifying information is collected.
+      Participation is <strong style="color:var(--teal)">voluntary</strong>.
+    </p>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:10px;line-height:1.6">
+      Principal Investigators: Pradyumna Madelkar & Walusha Ann Fernandes (MBBS Students, GMC) &nbsp;|&nbsp;
+      Guide: Dr. Hemangini K. Shah, Assoc. Prof., Dept. Community Medicine
+    </p>
+  </div>
+
+  <div class="card">
+    <div style="font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.5px;margin-bottom:12px">✅ INFORMED CONSENT</div>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Please confirm all four points to proceed:</p>
+    <div>
+      <div class="con-item" onclick="toggleConsent(0)"><div class="con-chk" id="cc0"></div><div class="con-txt">I have read and understood the Participant Information Sheet for this study and had the opportunity to ask questions.</div></div>
+      <div class="con-item" onclick="toggleConsent(1)"><div class="con-chk" id="cc1"></div><div class="con-txt">I understand that my participation is voluntary and I am free to withdraw at any time without giving any reason.</div></div>
+      <div class="con-item" onclick="toggleConsent(2)"><div class="con-chk" id="cc2"></div><div class="con-txt">I understand that my responses will be completely anonymous and confidential, and no identifying information will be recorded.</div></div>
+      <div class="con-item" onclick="toggleConsent(3)"><div class="con-chk" id="cc3"></div><div class="con-txt">I agree to take part in the above study.</div></div>
+    </div>
+    <div id="con-err" style="font-size:12px;color:var(--red);display:none;margin-top:10px">⚠ Please confirm all four items above before proceeding.</div>
+  </div>
+
+  <div class="btn-row" style="justify-content:center;margin-top:28px">
+    <button class="btn btn-p btn-lg" onclick="startSurvey()" style="padding:18px 48px;font-size:17px;border-radius:18px;letter-spacing:.3px">
+      🚀 &nbsp;Begin Survey
+    </button>
+  </div>
+</div>
+
+<!-- ▸ SECTION A -->
+<div class="screen" id="screen-a">
+  <div class="sec-hero sec-hero-a">
+    <div class="sec-icon-bg">🏥</div>
+    <div class="sec-hero-content">
+      <div class="sec-step" style="color:var(--teal)">SECTION A · 1 OF 5</div>
+      <div class="sec-title">Sociodemographic &amp; Professional Profile</div>
+      <div class="sec-sub">Help us understand the diversity of GMC faculty participating in this study.</div>
+      <div class="sec-xp-badge">⚡ +200 XP on completion</div>
+    </div>
+  </div>
+
+  <div class="qb">
+    <div class="ql"><span class="qn">A1</span> Your Unique Participation Code <span style="font-size:11px;color:var(--text-muted)">(auto-generated)</span></div>
+    <input class="tinput" id="a1" readonly style="background:var(--surface3);color:var(--teal);font-family:monospace;letter-spacing:4px;font-weight:800;font-size:16px;text-align:center">
+  </div>
+  <div class="qb" id="qb-a2"><div class="ql"><span class="qn">A2</span> Age (completed years)<span class="req">*</span></div><input class="tinput" id="a2" type="number" min="20" max="80" placeholder="e.g. 38" style="max-width:160px"><div class="ferr">Please enter your age.</div></div>
+  <div class="qb" id="qb-a3"><div class="ql"><span class="qn">A3</span> Sex<span class="req">*</span></div><div class="opts" id="g-a3"><label class="opt" onclick="selR('a3','Male',this)"><div class="opt-mark"></div><span class="opt-lbl">Male</span></label><label class="opt" onclick="selR('a3','Female',this)"><div class="opt-mark"></div><span class="opt-lbl">Female</span></label><label class="opt" onclick="selR('a3','Prefer not to say',this)"><div class="opt-mark"></div><span class="opt-lbl">Prefer not to say</span></label></div><div class="ferr">Please select an option.</div></div>
+  <div class="qb" id="qb-a4"><div class="ql"><span class="qn">A4</span> Department<span class="req">*</span></div><input class="tinput" id="a4" placeholder="e.g. Pharmacology, Medicine, Anatomy..."><div class="ferr">Please enter your department.</div></div>
+  <div class="qb" id="qb-a5"><div class="ql"><span class="qn">A5</span> Department Category<span class="req">*</span></div><div class="opts" id="g-a5"><label class="opt" onclick="selR('a5','Pre-clinical',this)"><div class="opt-mark"></div><span class="opt-lbl">Pre-clinical</span></label><label class="opt" onclick="selR('a5','Para-clinical',this)"><div class="opt-mark"></div><span class="opt-lbl">Para-clinical</span></label><label class="opt" onclick="selR('a5','Clinical',this)"><div class="opt-mark"></div><span class="opt-lbl">Clinical</span></label></div><div class="ferr">Please select a category.</div></div>
+  <div class="qb" id="qb-a6"><div class="ql"><span class="qn">A6</span> Current Designation<span class="req">*</span></div><div class="opts" id="g-a6"><label class="opt" onclick="selR('a6','Assistant Professor',this)"><div class="opt-mark"></div><span class="opt-lbl">Assistant Professor</span></label><label class="opt" onclick="selR('a6','Associate Professor',this)"><div class="opt-mark"></div><span class="opt-lbl">Associate Professor</span></label><label class="opt" onclick="selR('a6','Professor',this)"><div class="opt-mark"></div><span class="opt-lbl">Professor</span></label><label class="opt other-opt" onclick="selR('a6','Other',this)"><div class="opt-mark"></div><span class="opt-lbl">Other: <input class="other-txt" id="a6-other" placeholder="specify..." onclick="event.stopPropagation()"></span></label></div><div class="ferr">Please select your designation.</div></div>
+  <div class="qb" id="qb-a7"><div class="ql"><span class="qn">A7</span> Total years of teaching experience<span class="req">*</span></div><div class="opts" id="g-a7"><label class="opt" onclick="selR('a7','<5 years',this)"><div class="opt-mark"></div><span class="opt-lbl">Less than 5 years</span></label><label class="opt" onclick="selR('a7','5–10 years',this)"><div class="opt-mark"></div><span class="opt-lbl">5–10 years</span></label><label class="opt" onclick="selR('a7','11–20 years',this)"><div class="opt-mark"></div><span class="opt-lbl">11–20 years</span></label><label class="opt" onclick="selR('a7','>20 years',this)"><div class="opt-mark"></div><span class="opt-lbl">More than 20 years</span></label></div><div class="ferr">Please select your experience range.</div></div>
+  <div class="qb" id="qb-a8"><div class="ql"><span class="qn">A8</span> Highest qualification<span class="req">*</span></div><div class="opts" id="g-a8"><label class="opt" onclick="selR('a8','MD/MS',this)"><div class="opt-mark"></div><span class="opt-lbl">MD / MS</span></label><label class="opt" onclick="selR('a8','DNB',this)"><div class="opt-mark"></div><span class="opt-lbl">DNB</span></label><label class="opt" onclick="selR('a8','PhD',this)"><div class="opt-mark"></div><span class="opt-lbl">PhD</span></label><label class="opt" onclick="selR('a8','DM/MCh',this)"><div class="opt-mark"></div><span class="opt-lbl">DM / MCh</span></label><label class="opt other-opt" onclick="selR('a8','Other',this)"><div class="opt-mark"></div><span class="opt-lbl">Other: <input class="other-txt" id="a8-other" placeholder="specify..." onclick="event.stopPropagation()"></span></label></div><div class="ferr">Please select your qualification.</div></div>
+  <div class="qb" id="qb-a9"><div class="ql"><span class="qn">A9</span> Are you currently involved in active research / publications?<span class="req">*</span></div><div class="opts" id="g-a9"><label class="opt" onclick="selR('a9','Yes',this)"><div class="opt-mark"></div><span class="opt-lbl">Yes</span></label><label class="opt" onclick="selR('a9','No',this)"><div class="opt-mark"></div><span class="opt-lbl">No</span></label></div><div class="ferr">Please select an option.</div></div>
+  <div class="qb" id="qb-a10"><div class="ql"><span class="qn">A10</span> Access to personal devices <span style="font-size:11px;color:var(--text-muted)">(select all that apply)</span><span class="req">*</span></div><div class="opts" id="g-a10"><label class="opt" onclick="togCk(this,'a10','Smartphone')"><div class="opt-mark sq"></div><span class="opt-lbl">Smartphone</span></label><label class="opt" onclick="togCk(this,'a10','Laptop/Desktop')"><div class="opt-mark sq"></div><span class="opt-lbl">Laptop / Desktop</span></label><label class="opt" onclick="togCk(this,'a10','Tablet')"><div class="opt-mark sq"></div><span class="opt-lbl">Tablet</span></label><label class="opt" onclick="togCkEx(this,'a10','None')"><div class="opt-mark sq"></div><span class="opt-lbl">None</span></label></div><div class="ferr">Please select at least one device.</div></div>
+  <div class="qb" id="qb-a11"><div class="ql"><span class="qn">A11</span> Are you aware of any GMC/NMC policy on AI use by faculty or students?<span class="req">*</span></div><div class="opts" id="g-a11"><label class="opt" onclick="selR('a11','Yes',this)"><div class="opt-mark"></div><span class="opt-lbl">Yes</span></label><label class="opt" onclick="selR('a11','No',this)"><div class="opt-mark"></div><span class="opt-lbl">No</span></label><label class="opt" onclick="selR('a11','Not sure',this)"><div class="opt-mark"></div><span class="opt-lbl">Not sure</span></label></div><div class="ferr">Please select an option.</div></div>
+
+  <div class="btn-row sb">
+    <button class="btn btn-g" onclick="goTo('welcome')">← Back</button>
+    <button class="btn btn-p" onclick="nextSec('a','b',200,'Profile Set 🏥','Professional background captured!')">Next: AI Usage →</button>
+  </div>
+</div>
+
+<!-- ▸ SECTION B -->
+<div class="screen" id="screen-b">
+  <div class="sec-hero sec-hero-b">
+    <div class="sec-icon-bg">🤖</div>
+    <div class="sec-hero-content">
+      <div class="sec-step" style="color:var(--purple)">SECTION B · 2 OF 5</div>
+      <div class="sec-title">AI Tool Usage Patterns</div>
+      <div class="sec-sub">Tell us how you currently engage with AI in your professional practice.</div>
+      <div class="sec-xp-badge">⚡ +300 XP on completion</div>
+    </div>
+  </div>
+
+  <div class="qb" id="qb-b1"><div class="ql"><span class="qn">B1</span> Do you currently use any AI tool for teaching, clinical, or research purposes?<span class="req">*</span></div><div class="opts" id="g-b1"><label class="opt" onclick="selR('b1','Yes',this);showBExt(true)"><div class="opt-mark"></div><span class="opt-lbl">Yes</span></label><label class="opt" onclick="selR('b1','No',this);showBExt(false)"><div class="opt-mark"></div><span class="opt-lbl">No</span></label></div><div class="ferr">Please select an option.</div></div>
+
+  <div id="b-ext" style="display:none">
+    <div class="qb"><div class="ql"><span class="qn">B2</span> How long have you been using AI tools?</div><div class="opts" id="g-b2"><label class="opt" onclick="selR('b2','<3 months',this)"><div class="opt-mark"></div><span class="opt-lbl">Less than 3 months</span></label><label class="opt" onclick="selR('b2','3–6 months',this)"><div class="opt-mark"></div><span class="opt-lbl">3–6 months</span></label><label class="opt" onclick="selR('b2','6–12 months',this)"><div class="opt-mark"></div><span class="opt-lbl">6–12 months</span></label><label class="opt" onclick="selR('b2','>1 year',this)"><div class="opt-mark"></div><span class="opt-lbl">More than 1 year</span></label></div></div>
+    <div class="qb"><div class="ql"><span class="qn">B3</span> How frequently do you use AI tools professionally?</div><div class="opts" id="g-b3"><label class="opt" onclick="selR('b3','Daily',this)"><div class="opt-mark"></div><span class="opt-lbl">Daily</span></label><label class="opt" onclick="selR('b3','Several times/week',this)"><div class="opt-mark"></div><span class="opt-lbl">Several times a week</span></label><label class="opt" onclick="selR('b3','Weekly',this)"><div class="opt-mark"></div><span class="opt-lbl">Weekly</span></label><label class="opt" onclick="selR('b3','Monthly',this)"><div class="opt-mark"></div><span class="opt-lbl">Monthly</span></label><label class="opt" onclick="selR('b3','Rarely',this)"><div class="opt-mark"></div><span class="opt-lbl">Rarely</span></label></div></div>
+    <div class="qb"><div class="ql"><span class="qn">B4</span> Which AI tools do you use? <span style="font-size:11px;color:var(--text-muted)">(select all that apply)</span></div><div class="opts" id="g-b4"><label class="opt" onclick="togCk(this,'b4','ChatGPT')"><div class="opt-mark sq"></div><span class="opt-lbl">ChatGPT</span></label><label class="opt" onclick="togCk(this,'b4','Gemini')"><div class="opt-mark sq"></div><span class="opt-lbl">Gemini</span></label><label class="opt" onclick="togCk(this,'b4','Claude')"><div class="opt-mark sq"></div><span class="opt-lbl">Claude</span></label><label class="opt" onclick="togCk(this,'b4','Perplexity AI')"><div class="opt-mark sq"></div><span class="opt-lbl">Perplexity AI</span></label><label class="opt" onclick="togCk(this,'b4','Grok')"><div class="opt-mark sq"></div><span class="opt-lbl">Grok</span></label><label class="opt other-opt" onclick="togCk(this,'b4','Other')"><div class="opt-mark sq"></div><span class="opt-lbl">Other: <input class="other-txt" id="b4-other" placeholder="specify..." onclick="event.stopPropagation()"></span></label></div></div>
+    <div class="qb"><div class="ql"><span class="qn">B5</span> Primary purpose of AI use <span style="font-size:11px;color:var(--text-muted)">(select all that apply)</span></div><div class="opts" id="g-b5"><label class="opt" onclick="togCk(this,'b5','Teaching material/lectures')"><div class="opt-mark sq"></div><span class="opt-lbl">Preparing teaching material / lectures</span></label><label class="opt" onclick="togCk(this,'b5','Research/literature review')"><div class="opt-mark sq"></div><span class="opt-lbl">Research / literature review</span></label><label class="opt" onclick="togCk(this,'b5','Academic writing/editing')"><div class="opt-mark sq"></div><span class="opt-lbl">Academic writing / editing</span></label><label class="opt" onclick="togCk(this,'b5','Clinical decision support')"><div class="opt-mark sq"></div><span class="opt-lbl">Clinical decision support</span></label><label class="opt" onclick="togCk(this,'b5','Administrative tasks')"><div class="opt-mark sq"></div><span class="opt-lbl">Administrative tasks</span></label><label class="opt" onclick="togCk(this,'b5','Student assessment/MCQ generation')"><div class="opt-mark sq"></div><span class="opt-lbl">Student assessment / MCQ generation</span></label><label class="opt other-opt" onclick="togCk(this,'b5','Other')"><div class="opt-mark sq"></div><span class="opt-lbl">Other: <input class="other-txt" id="b5-other" placeholder="specify..." onclick="event.stopPropagation()"></span></label></div></div>
+    <div class="qb"><div class="ql"><span class="qn">B6</span> For which professional activities do you most use AI? <span style="font-size:11px;color:var(--text-muted)">(select all that apply)</span></div><div class="opts" id="g-b6"><label class="opt" onclick="togCk(this,'b6','Lecture preparation')"><div class="opt-mark sq"></div><span class="opt-lbl">Lecture preparation</span></label><label class="opt" onclick="togCk(this,'b6','Case discussion/clinical teaching')"><div class="opt-mark sq"></div><span class="opt-lbl">Case discussion / clinical teaching</span></label><label class="opt" onclick="togCk(this,'b6','Research methodology')"><div class="opt-mark sq"></div><span class="opt-lbl">Research methodology</span></label><label class="opt" onclick="togCk(this,'b6','Grant writing')"><div class="opt-mark sq"></div><span class="opt-lbl">Grant writing</span></label><label class="opt" onclick="togCk(this,'b6','Manuscript writing')"><div class="opt-mark sq"></div><span class="opt-lbl">Manuscript writing</span></label><label class="opt" onclick="togCk(this,'b6','Patient communication')"><div class="opt-mark sq"></div><span class="opt-lbl">Patient communication</span></label><label class="opt" onclick="togCk(this,'b6','CME')"><div class="opt-mark sq"></div><span class="opt-lbl">Continuing medical education (CME)</span></label></div></div>
+    <div class="qb"><div class="ql"><span class="qn">B7</span> On average, how much time per day do you spend using AI professionally?</div><div class="opts" id="g-b7"><label class="opt" onclick="selR('b7','<15 min',this)"><div class="opt-mark"></div><span class="opt-lbl">Less than 15 minutes</span></label><label class="opt" onclick="selR('b7','15–30 min',this)"><div class="opt-mark"></div><span class="opt-lbl">15–30 minutes</span></label><label class="opt" onclick="selR('b7','30–60 min',this)"><div class="opt-mark"></div><span class="opt-lbl">30–60 minutes</span></label><label class="opt" onclick="selR('b7','>60 min',this)"><div class="opt-mark"></div><span class="opt-lbl">More than 60 minutes</span></label></div></div>
+    <div class="qb"><div class="ql"><span class="qn">B8</span> Have you used AI-generated content in teaching material without explicit disclosure to students?</div><div class="opts" id="g-b8"><label class="opt" onclick="selR('b8','Yes, frequently',this)"><div class="opt-mark"></div><span class="opt-lbl">Yes, frequently</span></label><label class="opt" onclick="selR('b8','Yes, occasionally',this)"><div class="opt-mark"></div><span class="opt-lbl">Yes, occasionally</span></label><label class="opt" onclick="selR('b8','Rarely',this)"><div class="opt-mark"></div><span class="opt-lbl">Rarely</span></label><label class="opt" onclick="selR('b8','Never',this)"><div class="opt-mark"></div><span class="opt-lbl">Never</span></label></div></div>
+    <div class="qb"><div class="ql"><span class="qn">B9</span> Do you fact-check AI-generated medical information before using it?</div><div class="opts" id="g-b9"><label class="opt" onclick="selR('b9','Always',this)"><div class="opt-mark"></div><span class="opt-lbl">Always</span></label><label class="opt" onclick="selR('b9','Usually',this)"><div class="opt-mark"></div><span class="opt-lbl">Usually</span></label><label class="opt" onclick="selR('b9','Sometimes',this)"><div class="opt-mark"></div><span class="opt-lbl">Sometimes</span></label><label class="opt" onclick="selR('b9','Rarely',this)"><div class="opt-mark"></div><span class="opt-lbl">Rarely</span></label><label class="opt" onclick="selR('b9','Never',this)"><div class="opt-mark"></div><span class="opt-lbl">Never</span></label></div></div>
+    <div class="qb"><div class="ql"><span class="qn">B10</span> Have you guided or discouraged students regarding their use of AI tools?</div><div class="opts" id="g-b10"><label class="opt" onclick="selR('b10','Yes, actively guided',this)"><div class="opt-mark"></div><span class="opt-lbl">Yes, actively guided</span></label><label class="opt" onclick="selR('b10','Yes, occasionally advised',this)"><div class="opt-mark"></div><span class="opt-lbl">Yes, occasionally advised</span></label><label class="opt" onclick="selR('b10','Not addressed it',this)"><div class="opt-mark"></div><span class="opt-lbl">Not addressed it</span></label><label class="opt" onclick="selR('b10','Actively discouraged',this)"><div class="opt-mark"></div><span class="opt-lbl">Actively discouraged</span></label></div></div>
+  </div>
+
+  <div id="b-skip-note" class="skip-note">ℹ️ Since you don't currently use AI tools, Sections C and D are optional for you. You'll proceed directly to Section E (Barriers &amp; Facilitators).</div>
+
+  <div class="btn-row sb">
+    <button class="btn btn-g" onclick="goTo('a')">← Back</button>
+    <button class="btn btn-p" onclick="nextSecB()">Next →</button>
+  </div>
+</div>
+
+<!-- ▸ SECTION C -->
+<div class="screen" id="screen-c">
+  <div class="sec-hero sec-hero-c">
+    <div class="sec-icon-bg">🧠</div>
+    <div class="sec-hero-content">
+      <div class="sec-step" style="color:var(--orange)">SECTION C · 3 OF 5</div>
+      <div class="sec-title">Knowledge &amp; Awareness</div>
+      <div class="sec-sub">Mark each statement True, False, or Not Sure. You'll see your score animated at the end!</div>
+      <div class="sec-xp-badge">⚡ +400 XP + 10 bonus XP per correct answer</div>
+    </div>
+  </div>
+
+  <div class="score-card" id="c-score-card">
+    <div style="font-size:11px;color:var(--text-muted);letter-spacing:.8px;font-weight:700;margin-bottom:16px">YOUR KNOWLEDGE SCORE</div>
+    <div class="score-ring">
+      <svg viewBox="0 0 120 120" width="140" height="140">
+        <circle class="ring-bg" cx="60" cy="60" r="54"/>
+        <circle class="ring-prog" id="ring-prog" cx="60" cy="60" r="54"/>
+      </svg>
+      <div class="score-inner">
+        <div class="score-big" id="score-big">0</div>
+        <div class="score-den">/10</div>
+      </div>
+    </div>
+    <div class="score-lbl">AI in Medical Education Knowledge</div>
+    <div class="score-cat" id="score-cat">—</div>
+    <div class="score-xp-msg" id="score-xp-msg"></div>
+  </div>
+
+  <div id="c-qs">
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px">Select for each: <strong style="color:var(--green)">✓ True</strong> &nbsp;·&nbsp; <strong style="color:var(--red)">✗ False</strong> &nbsp;·&nbsp; <strong style="color:var(--text-muted)">? Not Sure</strong></p>
+
+    <div class="kq" id="kq1"><div class="kq-txt"><span class="qn">C1</span> AI tools like ChatGPT can sometimes generate medically inaccurate or fabricated information (hallucinations).</div><div class="kq-btns"><button class="kb" onclick="ansKQ(1,'True',this)">✓ True</button><button class="kb" onclick="ansKQ(1,'False',this)">✗ False</button><button class="kb" onclick="ansKQ(1,'Not Sure',this)">? Not Sure</button></div><div class="kq-fb" id="kfb1"></div></div>
+    <div class="kq" id="kq2"><div class="kq-txt"><span class="qn">C2</span> AI tools have been shown to pass the USMLE Step 1 at or above passing scores.</div><div class="kq-btns"><button class="kb" onclick="ansKQ(2,'True',this)">✓ True</button><button class="kb" onclick="ansKQ(2,'False',this)">✗ False</button><button class="kb" onclick="ansKQ(2,'Not Sure',this)">? Not Sure</button></div><div class="kq-fb" id="kfb2"></div></div>
+    <div class="kq" id="kq3"><div class="kq-txt"><span class="qn">C3</span> AI-generated medical content is always based on peer-reviewed, evidence-based literature.</div><div class="kq-btns"><button class="kb" onclick="ansKQ(3,'True',this)">✓ True</button><button class="kb" onclick="ansKQ(3,'False',this)">✗ False</button><button class="kb" onclick="ansKQ(3,'Not Sure',this)">? Not Sure</button></div><div class="kq-fb" id="kfb3"></div></div>
+    <div class="kq" id="kq4"><div class="kq-txt"><span class="qn">C4</span> Sharing patient details with AI chatbots raises data privacy and confidentiality concerns.</div><div class="kq-btns"><button class="kb" onclick="ansKQ(4,'True',this)">✓ True</button><button class="kb" onclick="ansKQ(4,'False',this)">✗ False</button><button class="kb" onclick="ansKQ(4,'Not Sure',this)">? Not Sure</button></div><div class="kq-fb" id="kfb4"></div></div>
+    <div class="kq" id="kq5"><div class="kq-txt"><span class="qn">C5</span> AI tools are currently approved by the NMC as a standard reference for teaching or clinical practice in India.</div><div class="kq-btns"><button class="kb" onclick="ansKQ(5,'True',this)">✓ True</button><button class="kb" onclick="ansKQ(5,'False',this)">✗ False</button><button class="kb" onclick="ansKQ(5,'Not Sure',this)">? Not Sure</button></div><div class="kq-fb" id="kfb5"></div></div>
+    <div class="kq" id="kq6"><div class="kq-txt"><span class="qn">C6</span> AI tools cannot reliably differentiate between high-quality and low-quality medical sources unless specifically trained to do so.</div><div class="kq-btns"><button class="kb" onclick="ansKQ(6,'True',this)">✓ True</button><button class="kb" onclick="ansKQ(6,'False',this)">✗ False</button><button class="kb" onclick="ansKQ(6,'Not Sure',this)">? Not Sure</button></div><div class="kq-fb" id="kfb6"></div></div>
+    <div class="kq" id="kq7"><div class="kq-txt"><span class="qn">C7</span> Using AI-generated content in academic publications without acknowledgement constitutes academic misconduct.</div><div class="kq-btns"><button class="kb" onclick="ansKQ(7,'True',this)">✓ True</button><button class="kb" onclick="ansKQ(7,'False',this)">✗ False</button><button class="kb" onclick="ansKQ(7,'Not Sure',this)">? Not Sure</button></div><div class="kq-fb" id="kfb7"></div></div>
+    <div class="kq" id="kq8"><div class="kq-txt"><span class="qn">C8</span> AI tools can provide individualized, patient-specific treatment recommendations with the same reliability as a qualified physician.</div><div class="kq-btns"><button class="kb" onclick="ansKQ(8,'True',this)">✓ True</button><button class="kb" onclick="ansKQ(8,'False',this)">✗ False</button><button class="kb" onclick="ansKQ(8,'Not Sure',this)">? Not Sure</button></div><div class="kq-fb" id="kfb8"></div></div>
+    <div class="kq" id="kq9"><div class="kq-txt"><span class="qn">C9</span> AI accuracy can vary significantly between medical specialties, being more reliable in some (e.g. radiology, pathology) than others.</div><div class="kq-btns"><button class="kb" onclick="ansKQ(9,'True',this)">✓ True</button><button class="kb" onclick="ansKQ(9,'False',this)">✗ False</button><button class="kb" onclick="ansKQ(9,'Not Sure',this)">? Not Sure</button></div><div class="kq-fb" id="kfb9"></div></div>
+    <div class="kq" id="kq10"><div class="kq-txt"><span class="qn">C10</span> Over-reliance on AI for clinical or educational decisions, without critical appraisal, may impair professional judgement over time.</div><div class="kq-btns"><button class="kb" onclick="ansKQ(10,'True',this)">✓ True</button><button class="kb" onclick="ansKQ(10,'False',this)">✗ False</button><button class="kb" onclick="ansKQ(10,'Not Sure',this)">? Not Sure</button></div><div class="kq-fb" id="kfb10"></div></div>
+  </div>
+
+  <div class="btn-row sb">
+    <button class="btn btn-g" onclick="goTo('b')">← Back</button>
+    <button class="btn btn-p" id="c-next-btn" onclick="nextSecC()">Reveal Score &amp; Continue →</button>
+  </div>
+</div>
+
+<!-- ▸ SECTION D — SLIDER LIKERT -->
+<div class="screen" id="screen-d">
+  <div class="sec-hero sec-hero-d">
+    <div class="sec-icon-bg">💭</div>
+    <div class="sec-hero-content">
+      <div class="sec-step" style="color:var(--blue)">SECTION D · 4 OF 5</div>
+      <div class="sec-title">Attitudes &amp; Perceptions</div>
+      <div class="sec-sub">Drag each slider from Strongly Agree to Strongly Disagree. There are no right or wrong answers.</div>
+      <div class="sec-xp-badge">⚡ +300 XP on completion</div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:0 4px">
+    <span style="font-size:11px;color:var(--green);font-weight:700">😊 Strongly Agree</span>
+    <span style="font-size:11px;color:var(--text-muted)">↔ drag slider</span>
+    <span style="font-size:11px;color:var(--red);font-weight:700">Strongly Disagree 😟</span>
+  </div>
+
+  <div class="lik-outer" id="lik-outer">
+    <!-- D1–D15 built by JS -->
+  </div>
+
+  <div class="btn-row sb">
+    <button class="btn btn-g" onclick="goTo('c')">← Back</button>
+    <button class="btn btn-p" onclick="nextSec('d','e',300,'Voice Heard 💭','Your perspectives are invaluable!')">Next: Barriers →</button>
+  </div>
+</div>
+
+<!-- ▸ SECTION E -->
+<div class="screen" id="screen-e">
+  <div class="sec-hero sec-hero-e">
+    <div class="sec-icon-bg">🔬</div>
+    <div class="sec-hero-content">
+      <div class="sec-step" style="color:var(--green)">SECTION E · 5 OF 5</div>
+      <div class="sec-title">Barriers &amp; Facilitators</div>
+      <div class="sec-sub">Click a number to assign a rank (1 = most significant). You can change your ranking at any time. Mark N/A if not applicable.</div>
+      <div class="sec-xp-badge">⚡ +500 XP — final section! 🏆</div>
+    </div>
+  </div>
+
+  <div class="qb">
+    <div class="ql" style="margin-bottom:14px"><span class="qn">E1</span> Rank the following <strong>BARRIERS</strong> to responsible AI use by faculty <span style="font-size:11px;color:var(--text-muted)">(1 = most significant)</span></div>
+    <div id="e1-items">
+      <div class="rank-item" id="ri-e1-0"><div class="rank-badge" id="rb-e1-0">?</div><div class="rank-txt">Lack of clear institutional guidelines on AI use by faculty</div><div class="rbtns" id="rbtns-e1-0"></div></div>
+      <div class="rank-item" id="ri-e1-1"><div class="rank-badge" id="rb-e1-1">?</div><div class="rank-txt">Concern about academic integrity / research misconduct</div><div class="rbtns" id="rbtns-e1-1"></div></div>
+      <div class="rank-item" id="ri-e1-2"><div class="rank-badge" id="rb-e1-2">?</div><div class="rank-txt">Unreliability of AI-generated medical and educational information</div><div class="rbtns" id="rbtns-e1-2"></div></div>
+      <div class="rank-item" id="ri-e1-3"><div class="rank-badge" id="rb-e1-3">?</div><div class="rank-txt">Limited internet / device access</div><div class="rbtns" id="rbtns-e1-3"></div></div>
+      <div class="rank-item" id="ri-e1-4"><div class="rank-badge" id="rb-e1-4">?</div><div class="rank-txt">Fear of becoming over-dependent on AI or losing professional skill</div><div class="rbtns" id="rbtns-e1-4"></div></div>
+      <div class="rank-item" id="ri-e1-5"><div class="rank-badge" id="rb-e1-5">?</div><div class="rank-txt">Lack of faculty training or orientation on AI tools</div><div class="rbtns" id="rbtns-e1-5"></div></div>
+      <div class="rank-item" id="ri-e1-6"><div class="rank-badge" id="rb-e1-6">?</div><div class="rank-txt">Privacy / data security concerns (patient data, institutional data)</div><div class="rbtns" id="rbtns-e1-6"></div></div>
+    </div>
+  </div>
+
+  <div class="qb" style="margin-top:28px">
+    <div class="ql" style="margin-bottom:14px"><span class="qn">E2</span> Rank the following <strong>FACILITATORS</strong> that would encourage responsible AI use by faculty <span style="font-size:11px;color:var(--text-muted)">(1 = most important)</span></div>
+    <div id="e2-items">
+      <div class="rank-item" id="ri-e2-0"><div class="rank-badge" id="rb-e2-0">?</div><div class="rank-txt">Ease of use and accessibility of AI tools</div><div class="rbtns" id="rbtns-e2-0"></div></div>
+      <div class="rank-item" id="ri-e2-1"><div class="rank-badge" id="rb-e2-1">?</div><div class="rank-txt">Time-saving for teaching, research, and administrative tasks</div><div class="rbtns" id="rbtns-e2-1"></div></div>
+      <div class="rank-item" id="ri-e2-2"><div class="rank-badge" id="rb-e2-2">?</div><div class="rank-txt">Availability of structured AI literacy training for faculty</div><div class="rbtns" id="rbtns-e2-2"></div></div>
+      <div class="rank-item" id="ri-e2-3"><div class="rank-badge" id="rb-e2-3">?</div><div class="rank-txt">Clear institutional guidelines for responsible use</div><div class="rbtns" id="rbtns-e2-3"></div></div>
+      <div class="rank-item" id="ri-e2-4"><div class="rank-badge" id="rb-e2-4">?</div><div class="rank-txt">Endorsement and guidance from department heads / institution</div><div class="rbtns" id="rbtns-e2-4"></div></div>
+      <div class="rank-item" id="ri-e2-5"><div class="rank-badge" id="rb-e2-5">?</div><div class="rank-txt">Improved teaching and research outcomes with AI</div><div class="rbtns" id="rbtns-e2-5"></div></div>
+      <div class="rank-item" id="ri-e2-6"><div class="rank-badge" id="rb-e2-6">?</div><div class="rank-txt">Peer usage and sharing of best practices among faculty</div><div class="rbtns" id="rbtns-e2-6"></div></div>
+    </div>
+  </div>
+
+  <div class="qb" style="margin-top:28px">
+    <div class="ql"><span class="qn">E3</span> In your own words, describe one suggestion you would make to help GMC faculty use AI tools more responsibly: <span style="font-size:11px;color:var(--text-muted)">(optional)</span></div>
+    <textarea class="tinput" id="e3" placeholder="Share your suggestion here..."></textarea>
+  </div>
+
+  <div class="btn-row sb">
+    <button class="btn btn-g" onclick="goBackFromE()">← Back</button>
+    <button class="btn btn-submit btn-lg" onclick="submitSurvey()">🏆 &nbsp;Submit Survey</button>
+  </div>
+</div>
+
+<!-- ▸ DONE -->
+<div class="screen" id="screen-done">
+  <div class="done-hero">
+    <div class="done-glow"></div>
+    <span class="done-ico">🎉</span>
+    <div class="done-title">Thank You for Contributing!</div>
+    <div class="done-sub">Your response has been submitted successfully.<br>You're helping shape the future of AI in medical education at GMC.</div>
+    <div class="done-xp-card">
+      <div style="font-size:12px;color:var(--text-muted);letter-spacing:.5px;font-weight:700;margin-bottom:6px">TOTAL XP EARNED</div>
+      <div class="done-xp" id="done-xp">0</div>
+      <div class="done-lvl" id="done-lvl">—</div>
+    </div>
+    <div class="done-badges" id="done-badges"></div>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:24px;line-height:1.65">
+      <em>Is AI Shaping Medical Education? A Faculty Perspective and Utilisation Exploration</em><br>
+      IEC Approved · Goa Medical College · 2026
+    </p>
+  </div>
+</div>
+
+</div><!-- /screens -->
+</div><!-- /app -->
+
+<!-- Achievement Toast -->
+<div id="ach-toast"><div class="ach-ico" id="ach-ico">🏅</div><div><div class="ach-ttl">ACHIEVEMENT UNLOCKED</div><div class="ach-nm" id="ach-nm">—</div></div></div>
+
+<!-- Submit overlay -->
+<div class="sub-overlay" id="sub-overlay"><div class="spin"></div><div class="sub-txt">Submitting your response…</div></div>
+
+<script>
+// ── CONFIG ──
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyb8-5Rw2_6ZepgaUD9R9A4Nl2IiYGR9Hpr5-7RK78nTnnR04G38xeY6VhoqmowzmMwDw/exec';
+
+// ── LIKERT DATA ──
+const LC = [
+  {l:'Strongly Agree',  e:'😊', c:'#4ade80'},
+  {l:'Agree',           e:'🙂', c:'#86efac'},
+  {l:'Neutral',         e:'😐', c:'#94a3b8'},
+  {l:'Disagree',        e:'🙁', c:'#fca5a5'},
+  {l:'Strongly Disagree',e:'😟',c:'#f87171'},
+];
+const LM = ['SA','A','N','D','SD'];
+
+const LIKERT_STMTS = [
+  'AI tools have improved my ability to prepare comprehensive and up-to-date teaching material.',
+  'AI tools save me significant time in my professional activities (teaching, research, clinical work).',
+  'I feel confident in my ability to critically appraise the accuracy of AI-generated medical information.',
+  'Regular use of AI tools by students reduces their motivation to read textbooks and develop independent reasoning.',
+  'AI tools are a useful supplement to, but should not replace, standard medical references and textbooks.',
+  'Using AI tools for teaching enhances the quality of medical education at GMC.',
+  'There should be formal, structured training on responsible AI use for faculty in the MBBS curriculum.',
+  'I am concerned that over-reliance on AI tools may harm the long-term clinical reasoning development of medical students.',
+  'AI-generated content used in clinical documentation or academic publications should be explicitly disclosed.',
+  'We have received adequate guidance on the appropriate use of AI in teaching and clinical practice.',
+  'AI use in medical education and research poses significant risks to academic integrity in Indian medical colleges.',
+  'I would incorporate AI tools more responsibly into teaching if clear institutional guidelines were provided.',
+  'AI tools are more useful for clinical faculty than for pre-clinical faculty.',
+  'AI tools have made me more curious and motivated to explore new developments in my specialty.',
+  'The benefits of AI tools in medical education and clinical practice outweigh their risks, if used responsibly.',
+];
+
+// ── STATE ──
+const state = {
+  consent:[false,false,false,false],
+  radio:{}, checks:{}, likert:{}, kq:{},
+  rank:{e1:{},e2:{}},
+  xp:0, achievements:[], skipCD:false, cScored:false,
+};
+const CORRECT={1:'True',2:'True',3:'False',4:'True',5:'False',6:'True',7:'True',8:'False',9:'True',10:'True'};
+const LEVELS=[
+  {min:0,   name:'Level 1 · Observer'},
+  {min:200, name:'Level 2 · Explorer'},
+  {min:500, name:'Level 3 · Contributor'},
+  {min:900, name:'Level 4 · Analyst'},
+  {min:1300,name:'Level 5 · Scholar'},
+  {min:1600,name:'Level 6 · Research Champion'},
+];
+
+// ── BUILD LIKERT SLIDERS ──
+function buildLikert(){
+  const outer=document.getElementById('lik-outer');
+  outer.innerHTML='';
+  LIKERT_STMTS.forEach((stmt,i)=>{
+    const n=i+1;
+    const div=document.createElement('div');
+    div.className='lik-item';div.id='li'+n;
+    div.innerHTML=`
+      <div class="lik-stmt"><span class="lik-n">D${n}</span>${stmt}</div>
+      <div class="lik-vd unset" id="ld${n}">
+        <span class="lik-em">◈</span>
+        <span class="lik-vt" style="color:var(--text-muted)">Drag to rate</span>
+      </div>
+      <div class="lik-track">
+        <input class="ls" type="range" min="0" max="4" value="2" id="ls${n}"
+               oninput="moveLik(${n},this)" style="--tc:#64748b">
+        <div class="lik-labels">
+          <span>Strongly<br>Agree</span><span>Agree</span><span>Neutral</span><span>Disagree</span><span>Strongly<br>Disagree</span>
+        </div>
+      </div>`;
+    outer.appendChild(div);
+  });
+}
+
+function moveLik(n,el){
+  const idx=parseInt(el.value);
+  const cfg=LC[idx];
+  state.likert[n]=LM[idx];
+  const d=document.getElementById('ld'+n);
+  d.classList.remove('unset');
+  d.innerHTML=`<span class="lik-em">${cfg.e}</span><span class="lik-vt" style="color:${cfg.c}">${cfg.l}</span>`;
+  el.style.setProperty('--tc',cfg.c);
+  document.getElementById('li'+n).classList.add('touched');
+}
+
+// ── BUILD RANK BUTTONS ──
+function buildRankBtns(){
+  ['e1','e2'].forEach(sec=>{
+    for(let i=0;i<7;i++){
+      const cont=document.getElementById('rbtns-'+sec+'-'+i);
+      cont.innerHTML='';
+      for(let r=1;r<=7;r++){
+        const b=document.createElement('button');
+        b.className='rb';b.textContent=r;
+        b.onclick=()=>setRank(sec,i,r);
+        cont.appendChild(b);
+      }
+      const na=document.createElement('button');
+      na.className='rb na-rb';na.textContent='N/A';
+      na.onclick=()=>setRank(sec,i,'NA');
+      cont.appendChild(na);
+    }
+  });
+}
+
+function setRank(sec,idx,rank){
+  const s=state.rank[sec];
+  if(rank!=='NA'){
+    for(const [k,v] of Object.entries(s)){
+      if(v===rank&&parseInt(k)!==idx){delete s[k];refreshRankUI(sec,parseInt(k))}
+    }
+  }
+  if(s[idx]===rank)delete s[idx]; else s[idx]=rank;
+  refreshRankUI(sec,idx);
+}
+
+function refreshRankUI(sec,idx){
+  const val=state.rank[sec][idx];
+  const badge=document.getElementById('rb-'+sec+'-'+idx);
+  const item=document.getElementById('ri-'+sec+'-'+idx);
+  const btns=document.getElementById('rbtns-'+sec+'-'+idx).querySelectorAll('.rb');
+  btns.forEach(b=>b.classList.remove('ractive','na-active'));
+  if(val===undefined){badge.textContent='?';badge.className='rank-badge';item.classList.remove('is-ranked')}
+  else if(val==='NA'){badge.textContent='N/A';badge.className='rank-badge na-set';item.classList.add('is-ranked');btns[btns.length-1].classList.add('na-active')}
+  else{badge.textContent=val;badge.className='rank-badge set';item.classList.add('is-ranked');btns[val-1].classList.add('ractive')}
+}
+
+// ── NAVIGATION ──
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  document.querySelectorAll('.spill').forEach(s=>{
+    s.classList.remove('active');
+    if(s.dataset.s===id)s.classList.add('active');
+  });
+}
+
+function startSurvey(){
+  if(!state.consent.every(Boolean)){document.getElementById('con-err').style.display='block';return}
+  document.getElementById('con-err').style.display='none';
+  document.getElementById('a1').value=genCode();
+  goTo('a');
+}
+
+// ── FORM HELPERS ──
+function genCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:8},()=>c[Math.floor(Math.random()*c.length)]).join('')}
+function toggleConsent(i){state.consent[i]=!state.consent[i];document.getElementById('cc'+i).classList.toggle('on',state.consent[i])}
+function selR(f,v,el){state.radio[f]=v;el.closest('.opts').querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');el.closest('.qb')?.classList.remove('err')}
+function togCk(el,f,v){if(!state.checks[f])state.checks[f]=new Set();const s=state.checks[f];if(s.has(v)){s.delete(v);el.classList.remove('sel')}else{s.add(v);el.classList.add('sel')};el.closest('.qb')?.classList.remove('err')}
+function togCkEx(el,f,v){if(!state.checks[f])state.checks[f]=new Set();el.closest('.opts').querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));state.checks[f]=new Set([v]);el.classList.add('sel')}
+function getC(f){return state.checks[f]?[...state.checks[f]].join(', '):''}
+function ansKQ(n,v,btn){state.kq[n]=v;document.getElementById('kq'+n).querySelectorAll('.kb').forEach(b=>b.className='kb');btn.className='kb ksel-'+(v==='True'?'T':v==='False'?'F':'N');document.getElementById('kq'+n).classList.add('answered')}
+function showBExt(y){document.getElementById('b-ext').style.display=y?'block':'none';document.getElementById('b-skip-note').style.display=y?'none':'block'}
+
+// ── VALIDATION ──
+function validateSec(fields){
+  let ok=true;
+  fields.forEach(f=>{
+    const qb=document.getElementById('qb-'+f);if(!qb)return;
+    let filled=f==='a2'?!!document.getElementById('a2').value.trim():f==='a4'?!!document.getElementById('a4').value.trim():f==='a10'?state.checks[f]?.size>0:!!state.radio[f];
+    if(!filled){qb.classList.add('err');ok=false}else qb.classList.remove('err');
+  });
+  if(!ok)document.querySelector('.qb.err')?.scrollIntoView({behavior:'smooth',block:'center'});
+  return ok;
+}
+
+// ── SECTION NAVIGATION ──
+function nextSec(from,to,xp,ach,msg){
+  const fmap={a:['a2','a3','a4','a5','a6','a7','a8','a9','a10','a11'],d:[]};
+  if(fmap[from]?.length&&!validateSec(fmap[from]))return;
+  addXP(xp);if(ach)showAch(ach,msg);markDone(from);goTo(to);
+}
+
+function nextSecB(){
+  if(!validateSec(['b1']))return;
+  addXP(300);showAch('AI Explorer 🤖','Usage patterns captured!');markDone('b');
+  if(state.radio['b1']==='No'){state.skipCD=true;goTo('e')}
+  else{state.skipCD=false;goTo('c')}
+}
+
+function nextSecC(){
+  if(Object.keys(state.kq).length<10){alert('Please answer all 10 knowledge questions before continuing.');return}
+  if(state.cScored){goTo('d');return}
+  let score=0;
+  for(let i=1;i<=10;i++){
+    const a=state.kq[i],c=CORRECT[i],box=document.getElementById('kq'+i),fb=document.getElementById('kfb'+i);
+    if(a===c){score++;box.classList.add('correct');fb.textContent='✓ Correct!'}
+    else{box.classList.add('wrong');fb.textContent='✗ The correct answer is: '+c}
+  }
+  const bXP=400,bns=score*10;addXP(bXP+bns);
+  showAch('Knowledge Champion 🧠','Score: '+score+'/10 — well done!');
+  markDone('c');state.cScored=true;
+
+  // Animate ring
+  const card=document.getElementById('c-score-card');card.classList.add('show');
+  const circumference=2*Math.PI*54; // r=54
+  const ring=document.getElementById('ring-prog');
+  ring.style.strokeDashoffset=circumference;
+  let n=0;
+  const t=setInterval(()=>{
+    n=Math.min(n+1,score);
+    document.getElementById('score-big').textContent=n;
+    ring.style.strokeDashoffset=circumference-(n/10)*circumference;
+    if(n>=score)clearInterval(t);
+  },90);
+  const cat=document.getElementById('score-cat');
+  if(score>=8){cat.textContent='🏆 Good (8–10)';cat.className='score-cat cat-good';ring.style.stroke='#4ade80'}
+  else if(score>=5){cat.textContent='📊 Moderate (5–7)';cat.className='score-cat cat-mod';ring.style.stroke='#f59e0b'}
+  else{cat.textContent='📚 Poor (< 5)';cat.className='score-cat cat-poor';ring.style.stroke='#f87171'}
+  document.getElementById('score-xp-msg').textContent=`+${bXP} base XP + ${bns} bonus XP earned`;
+  document.getElementById('c-qs').style.display='none';
+
+  const btn=document.getElementById('c-next-btn');
+  btn.textContent='Next: Attitudes →';btn.onclick=()=>goTo('d');
+}
+
+function goBackFromE(){goTo(state.skipCD?'b':'d')}
+
+function markDone(s){document.querySelectorAll('.spill').forEach(sp=>{if(sp.dataset.s===s)sp.classList.add('done')})}
+
+// ── XP & LEVELS ──
+function addXP(n){
+  state.xp+=n;
+  document.getElementById('xp-count').textContent=state.xp;
+  document.getElementById('xp-fill').style.width=Math.min(state.xp/1600*100,100)+'%';
+  const lvl=LEVELS.filter(l=>state.xp>=l.min).pop();
+  document.getElementById('lvl-pill').textContent=lvl.name.split('·')[0].trim();
+}
+
+// ── ACHIEVEMENTS ──
+let achTimer=null;
+function showAch(name,msg){
+  state.achievements.push(name);
+  document.getElementById('ach-nm').textContent=msg||name;
+  const t=document.getElementById('ach-toast');t.classList.add('show');
+  if(achTimer)clearTimeout(achTimer);
+  achTimer=setTimeout(()=>t.classList.remove('show'),3400);
+}
+
+// ── SUBMIT ──
+async function submitSurvey(){
+  const d=state.radio,c=state.checks,k=state.kq,l=state.likert,rk=state.rank;
+  const data={
+    timestamp:new Date().toISOString(),
+    A1_Code:document.getElementById('a1').value,
+    A2_Age:document.getElementById('a2').value,
+    A3_Sex:d['a3']||'',A4_Department:document.getElementById('a4').value,
+    A5_DeptCategory:d['a5']||'',
+    A6_Designation:d['a6']==='Other'?'Other: '+(document.getElementById('a6-other').value||''):(d['a6']||''),
+    A7_TeachingExp:d['a7']||'',
+    A8_Qualification:d['a8']==='Other'?'Other: '+(document.getElementById('a8-other').value||''):(d['a8']||''),
+    A9_ActiveResearch:d['a9']||'',A10_Devices:getC('a10'),A11_NMC_Aware:d['a11']||'',
+    B1_UsesAI:d['b1']||'',B2_AIDuration:d['b2']||'',B3_Frequency:d['b3']||'',
+    B4_AITools:getC('b4'),B5_Purpose:getC('b5'),B6_Activities:getC('b6'),
+    B7_TimePerDay:d['b7']||'',B8_Disclosure:d['b8']||'',B9_FactCheck:d['b9']||'',B10_Guidance:d['b10']||'',
+    C1:k[1]||'',C2:k[2]||'',C3:k[3]||'',C4:k[4]||'',C5:k[5]||'',
+    C6:k[6]||'',C7:k[7]||'',C8:k[8]||'',C9:k[9]||'',C10:k[10]||'',
+    C_Score:Object.entries(k).filter(([i,v])=>v===CORRECT[parseInt(i)]).length,
+    D1:l[1]||'',D2:l[2]||'',D3:l[3]||'',D4:l[4]||'',D5:l[5]||'',
+    D6:l[6]||'',D7:l[7]||'',D8:l[8]||'',D9:l[9]||'',D10:l[10]||'',
+    D11:l[11]||'',D12:l[12]||'',D13:l[13]||'',D14:l[14]||'',D15:l[15]||'',
+    E1_Guidelines:rk.e1[0]??'',E1_Integrity:rk.e1[1]??'',E1_Reliability:rk.e1[2]??'',
+    E1_Internet:rk.e1[3]??'',E1_Dependence:rk.e1[4]??'',E1_Training:rk.e1[5]??'',E1_Privacy:rk.e1[6]??'',
+    E2_Ease:rk.e2[0]??'',E2_TimeSaving:rk.e2[1]??'',E2_Literacy:rk.e2[2]??'',
+    E2_Guidelines:rk.e2[3]??'',E2_Endorsement:rk.e2[4]??'',E2_Outcomes:rk.e2[5]??'',E2_PeerUsage:rk.e2[6]??'',
+    E3_Suggestion:document.getElementById('e3').value,
+    TotalXP:state.xp,Achievements:state.achievements.join(', '),
+  };
+  document.getElementById('sub-overlay').classList.add('show');
+  try{await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(data)})}catch(e){}
+  document.getElementById('sub-overlay').classList.remove('show');
+  addXP(500);showAch('Research Champion 🏆','Survey complete — thank you!');markDone('e');
+  document.getElementById('done-xp').textContent=state.xp+' XP';
+  const lvl=LEVELS.filter(l=>state.xp>=l.min).pop();
+  document.getElementById('done-lvl').textContent='🏅 '+lvl.name;
+  const bc=document.getElementById('done-badges');
+  state.achievements.forEach(a=>{const d=document.createElement('div');d.className='dbadge';d.textContent='✦ '+a;bc.appendChild(d)});
+  goTo('done');launchConfetti();
+}
+
+// ── CONFETTI ──
+function launchConfetti(){
+  const cols=['#00d4aa','#3b82f6','#a78bfa','#f59e0b','#f87171','#4ade80','#fb923c'];
+  for(let i=0;i<90;i++){
+    setTimeout(()=>{
+      const p=document.createElement('div');p.className='cf';
+      const sz=5+Math.random()*9;
+      p.style.cssText=`left:${Math.random()*100}vw;width:${sz}px;height:${sz}px;background:${cols[Math.floor(Math.random()*cols.length)]};animation-duration:${2.8+Math.random()*2}s;border-radius:${Math.random()>.4?'50%':'3px'}`;
+      document.body.appendChild(p);setTimeout(()=>p.remove(),6000);
+    },i*30);
+  }
+}
+
+// ── INIT ──
+buildLikert();
+buildRankBtns();
+</script>
+</body>
+</html>
