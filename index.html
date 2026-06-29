@@ -619,12 +619,7 @@ function buildRankBtns(){
 }
 
 function setRank(sec,idx,rank){
-  const s=state.rank[sec];
-  // Clear any other item that already holds this rank
-  for(const [k,v] of Object.entries(s)){
-    if(v===rank&&parseInt(k)!==idx){delete s[k];refreshRankUI(sec,parseInt(k));}
-  }
-  s[idx]=rank;
+  state.rank[sec][idx]=rank;
   refreshRankUI(sec,idx);
 }
 
